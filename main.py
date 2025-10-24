@@ -14,7 +14,7 @@ def main():
 
     print("\n[Обработка данных]")
     processor = DataProcessor(repo_data)
-    top_python_repos = processor.select('Nameks', 'Stars') \
+    top_python_repos = processor.select('Name', 'Stars') \
         .sort_by('Stars', reverse=True) \
         .execute()
 
@@ -40,8 +40,8 @@ def main():
 
     print("\n[Экспорт результатов]")
     exporter = DataExporter(all_stats)
-    exporter.export('repo_statistics.json', export_format='json')
-    exporter.export('repo_statistics.csv', export_format='csv')
+    exporter.export('repo_statistics', export_format='json')
+    exporter.export('repo_statistics', export_format='csv')
 
 
 if __name__ == "__main__":
