@@ -1,7 +1,3 @@
-import os
-import shutil
-from pathlib import Path
-
 import uvicorn
 from final_project.settings import settings
 
@@ -17,6 +13,7 @@ def main() -> None:
         log_level=settings.log_level.value.lower(),
         factory=True,
     )
+
 
 if __name__ == "__main__":
     main()

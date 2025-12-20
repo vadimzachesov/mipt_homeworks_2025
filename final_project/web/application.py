@@ -1,8 +1,5 @@
-import logging
-
 from fastapi import FastAPI
 from fastapi.responses import UJSONResponse
-from final_project.settings import settings
 from final_project.web.api.router import api_router
 
 from final_project.web.lifespan import lifespan_setup

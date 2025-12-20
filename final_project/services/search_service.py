@@ -7,18 +7,18 @@ from final_project.infrastructure.github_client import GitHubClient
 
 
 class SearchService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = GitHubClient()
 
     async def create_search_report(
-            self,
-            limit: int,
-            offset: int,
-            lang: str,
-            stars_min: int = 0,
-            stars_max: Optional[int] = None,
-            forks_min: int = 0,
-            forks_max: Optional[int] = None
+        self,
+        limit: int,
+        offset: int,
+        lang: str,
+        stars_min: int = 0,
+        stars_max: Optional[int] = None,
+        forks_min: int = 0,
+        forks_max: Optional[int] = None
     ) -> str:
         query_parts = []
         if lang:
@@ -66,7 +66,7 @@ class SearchService:
 
         return filename
 
-    async def _save_to_csv(self, items: List[Dict[str, Any]], path: str):
+    async def _save_to_csv(self, items: List[Dict[str, Any]], path: str) -> None:
         fieldnames = [
             'Name', 'Description', 'URL', 'Created At', 'Updated At', 'Homepage',
             'Size', 'Stars', 'Forks', 'Issues', 'Watchers', 'Language', 'License',
