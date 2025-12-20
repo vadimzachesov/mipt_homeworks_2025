@@ -1,16 +1,15 @@
-SRC_FOLDERS=$(wildcard homework_*)
+.PHONY: lint-check run clean
 
-lint:
-	ruff check $(SRC_FOLDERS)
-# 	flakeheaven lint $(SRC_FOLDERS)
-	mypy $(SRC_FOLDERS)
-	@make lint-format
+lint-check:
+	@echo "Running flake8..."
+	uv run flake8 app
+	@echo "Running mypy..."
+	uv run mypy app
 
-format:
-	ruff format $(SRC_FOLDERS)
+run:
+	uv run python -m final_project
 
-fix:
-	ruff check $(SRC_FOLDERS) --fix
-
-lint-format:
-	ruff format $(SRC_FOLDERS) --check
+clean:
+	rm -rf static/*.csv
+	rm -rf .mypy_cache
+	rm -rf .pytest_cache
