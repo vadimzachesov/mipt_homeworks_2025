@@ -1,8 +1,7 @@
-.idea
-.vscode
+### Python template
 
-*.sqlite3
-
+.idea/
+.vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -63,8 +62,8 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
 
 # Flask stuff:
 instance/
@@ -110,6 +109,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.env
 .venv
 env/
 venv/
