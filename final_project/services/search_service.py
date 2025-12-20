@@ -4,6 +4,8 @@ import os
 from typing import List, Dict, Any, Optional
 from aiofile import async_open
 from final_project.infrastructure.github_client import GitHubClient
+from fastapi import HTTPException
+import httpx
 
 
 class SearchService:
@@ -41,13 +43,19 @@ class SearchService:
         target_count = offset + limit
 
         while len(all_items) < target_count:
-            data = await self.client.search_repositories(
-                query=final_query,
-                page=page,
-                per_page=100
-            )
+            try:
+                data = await self.client.search_repositories(
+                    query=final_query,
+                    page=page,
+                    per_page=100
+                )
+            except httpx.HTTPStatusError as exc:
+                status_code = exc.response.status_code if exc.response is not None else 502
+                raise HTTPException(status_code=502, detail=f"Upstream service error ({status_code})")
+            except httpx.RequestError:
+                raise HTTPException(status_code=502, detail="Upstream request error")
 
-            items = data.get("items", [])
+            items = data.get("items", []) if isinstance(data, dict) else []
             if not items:
                 break
 
@@ -62,7 +70,14 @@ class SearchService:
         filename = f"repositories_{lang}_{limit}_{offset}.csv"
         file_path = os.path.join("static", filename)
 
-        await self._save_to_csv(sliced_items, file_path)
+        dirpath = os.path.dirname(file_path)
+        if dirpath and not os.path.exists(dirpath):
+            os.makedirs(dirpath, exist_ok=True)
+
+        try:
+            await self._save_to_csv(sliced_items, file_path)
+        except Exception:
+            raise HTTPException(status_code=500, detail="Failed to save CSV")
 
         return filename
 

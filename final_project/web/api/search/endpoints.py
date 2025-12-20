@@ -1,9 +1,12 @@
 from typing import Dict, Any
 
-from fastapi import APIRouter, Query, Depends
+from fastapi import APIRouter, Query, Depends, HTTPException
+import logging
+import traceback
 from final_project.services.search_service import SearchService
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.post("", status_code=201)
@@ -17,18 +20,25 @@ async def search_repositories(
     forks_max: int = Query(None, ge=0),
     service: SearchService = Depends()
 ) -> Dict[str, Any]:
-    filename = await service.create_search_report(
-        limit=limit,
-        offset=offset,
-        lang=lang,
-        stars_min=stars_min,
-        stars_max=stars_max,
-        forks_min=forks_min,
-        forks_max=forks_max
-    )
+    try:
+        filename = await service.create_search_report(
+            limit=limit,
+            offset=offset,
+            lang=lang,
+            stars_min=stars_min,
+            stars_max=stars_max,
+            forks_min=forks_min,
+            forks_max=forks_max
+        )
 
-    return {
-        "status": "success",
-        "message": "File created successfully",
-        "filename": filename
-    }
+        return {
+            "status": "success",
+            "message": "File created successfully",
+            "filename": filename
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        tb = traceback.format_exc()
+        logger.error("Unhandled exception in search_repositories: %s\n%s", exc, tb)
+        raise HTTPException(status_code=500, detail="Internal server error")

@@ -6,6 +6,8 @@ class GitHubClient:
     BASE_URL = "https://api.github.com"
 
     def __init__(self, token: Optional[str] = None):
+        token = token
+
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "FastAPI-Template-Searcher",

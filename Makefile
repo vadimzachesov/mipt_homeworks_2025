@@ -7,7 +7,7 @@ lint-check:
 	uv run mypy app
 
 run:
-	uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	uv run python -m final_project
 
 clean:
 	rm -rf static/*.csv
