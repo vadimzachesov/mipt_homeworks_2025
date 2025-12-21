@@ -1,4 +1,5 @@
 from fastapi.routing import APIRouter
+
 from final_project.web.api import monitoring, search
 
 api_router = APIRouter()

@@ -1,4 +1,5 @@
 import uvicorn
+
 from final_project.settings import settings
 
 
