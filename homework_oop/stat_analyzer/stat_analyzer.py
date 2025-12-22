@@ -25,10 +25,14 @@ class StatisticsCalculator:
         return max(self.__data, key=lambda x: x.get("Stars", 0)).get("Name", "N\A")
 
     def _find_repos_without_language(self) -> list[str]:
-        return [row.get("Name", "N/A") for row in self.__data if not row.get("Language")]
+        return [
+            row.get("Name", "N/A") for row in self.__data if not row.get("Language")
+        ]
 
     def _find_top_10_by_commits(self) -> list[str]:
-        sorted_by_commits = sorted(self.__data, key=lambda x: x.get("Commits", 0), reverse=True)  # В файле нет коммитов
+        sorted_by_commits = sorted(
+            self.__data, key=lambda x: x.get("Commits", 0), reverse=True
+        )  # В файле нет коммитов
         sorted_by_commits = sorted_by_commits[:10]
         return [row.get("Name", "N/A") for row in sorted_by_commits]
 

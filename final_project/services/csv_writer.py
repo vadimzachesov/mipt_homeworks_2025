@@ -33,7 +33,9 @@ class CsvWriter:
 
             for row in rows:
                 row_dict = asdict(row)
-                formatted_row = {header_map[key]: value for key, value in row_dict.items()}
+                formatted_row = {
+                    header_map[key]: value for key, value in row_dict.items()
+                }
                 writer.writerow(formatted_row)
                 await afp.write(io_obj.getvalue())
                 io_obj.seek(0)

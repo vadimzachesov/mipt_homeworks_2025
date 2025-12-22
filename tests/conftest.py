@@ -18,14 +18,11 @@ def anyio_backend() -> str:
 
     :return: backend name.
     """
-    return 'asyncio'
-
+    return "asyncio"
 
 
 @pytest.fixture
-def fastapi_app(
-    
-) -> FastAPI:
+def fastapi_app() -> FastAPI:
     """
     Fixture for creating FastAPI app.
 
@@ -37,8 +34,7 @@ def fastapi_app(
 
 @pytest.fixture
 async def client(
-    fastapi_app: FastAPI,
-    anyio_backend: Any
+    fastapi_app: FastAPI, anyio_backend: Any
 ) -> AsyncGenerator[AsyncClient, None]:
     """
     Fixture that creates client for requesting server.
@@ -46,5 +42,7 @@ async def client(
     :param fastapi_app: the application.
     :yield: client for the app.
     """
-    async with AsyncClient(transport=ASGITransport(fastapi_app), base_url="http://test", timeout=2.0) as ac:
-            yield ac
+    async with AsyncClient(
+        transport=ASGITransport(fastapi_app), base_url="http://test", timeout=2.0
+    ) as ac:
+        yield ac

@@ -1,10 +1,12 @@
-
 from pathlib import Path
 
 from fastapi import HTTPException
 
 from final_project.infrastructure.exceptions import GitHubAPIError
-from final_project.infrastructure.github_client import GitHubClient, GitHubRepository
+from final_project.infrastructure.github_client import (
+    GitHubClient,
+    GitHubRepository,
+)
 from final_project.models.csv_models import RepositoryCsvRow
 from final_project.services.csv_writer import CsvWriter
 from final_project.services.query_builder import build_github_search_query
@@ -13,7 +15,9 @@ from final_project.services.query_builder import build_github_search_query
 class SearchService:
     """Search service for searching repositories on GitHub."""
 
-    def __init__(self, github_client: GitHubClient, csv_writer: CsvWriter) -> None:
+    def __init__(
+        self, github_client: GitHubClient, csv_writer: CsvWriter
+    ) -> None:
         self.client = github_client
         self.csv_writer = csv_writer
 
@@ -64,10 +68,11 @@ class SearchService:
             if len(data.items) < 100:
                 break
 
-        sliced_items = all_items[offset : offset + limit]
+        sliced_items = all_items[offset: offset + limit]
 
         csv_rows = [
-            RepositoryCsvRow.from_github_repository(repo) for repo in sliced_items
+            RepositoryCsvRow.from_github_repository(repo)
+            for repo in sliced_items
         ]
 
         filename = f"repositories_{lang}_{limit}_{offset}.csv"
@@ -76,7 +81,8 @@ class SearchService:
         try:
             await self.csv_writer.write_repositories_csv(csv_rows, file_path)
         except Exception as exc:
-            raise HTTPException(status_code=500, detail=f"Failed to save CSV: {exc}") \
-            from exc
+            raise HTTPException(
+                status_code=500, detail=f"Failed to save CSV: {exc}"
+            ) from exc
 
         return filename

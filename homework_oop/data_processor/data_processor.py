@@ -1,6 +1,7 @@
 from collections import defaultdict
 import difflib
 
+
 class DataProcessor:
     __slots__ = ("__available_fields", "__data", "__operations")
 
@@ -12,11 +13,13 @@ class DataProcessor:
     @staticmethod
     def __validate_fields(fields: list[str], available_fields: list[str]) -> None:
         invalid_fields = [f for f in fields if f not in available_fields]
-        similar_fields = [difflib.get_close_matches(f, available_fields, n=1) for f in invalid_fields]
+        similar_fields = [
+            difflib.get_close_matches(f, available_fields, n=1) for f in invalid_fields
+        ]
         if invalid_fields:
-            error_message = f"Ошибка: не найдены поля: {", ".join(invalid_fields)}."
+            error_message = f"Ошибка: не найдены поля: {', '.join(invalid_fields)}."
             if similar_fields:
-                error_message += f" Возможно, вы имели в виду: {", ".join([sf[0] for sf in similar_fields if sf])}."
+                error_message += f" Возможно, вы имели в виду: {', '.join([sf[0] for sf in similar_fields if sf])}."
             raise ValueError(error_message)
 
     def select(self, *fields: str):
@@ -50,9 +53,13 @@ class DataProcessor:
         for op_type, op_args in self.__operations:
             if is_grouped:
                 if op_type == "select" or op_type == "sort_by":
-                    raise AttributeError("Ошибка: Нельзя вызывать 'select' и 'sort_by' после 'group_by'.")
-                if op_type == 'group_by':
-                    raise AttributeError("Ошибка: Двойная группировка не поддерживается.")
+                    raise AttributeError(
+                        "Ошибка: Нельзя вызывать 'select' и 'sort_by' после 'group_by'."
+                    )
+                if op_type == "group_by":
+                    raise AttributeError(
+                        "Ошибка: Двойная группировка не поддерживается."
+                    )
             if op_type == "group_by":
                 is_grouped = True
             if op_type == "select":
@@ -60,11 +67,13 @@ class DataProcessor:
                     self.__validate_fields(op_args, fields)
                     fields = list(set(op_args))
                 except ValueError:
-                    raise AttributeError("Ошибка: Неподдерживаемый порядок запросов 'select'")
+                    raise AttributeError(
+                        "Ошибка: Неподдерживаемый порядок запросов 'select'"
+                    )
             execution_order[op_type].append(op_args)
 
-        if execution_order['select']:
-            selected_fields = execution_order['select'][-1]
+        if execution_order["select"]:
+            selected_fields = execution_order["select"][-1]
             processed_data = [
                 {field: row.get(field, None) for field in selected_fields}
                 for row in processed_data

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, fields
+from dataclasses import dataclass
 
 from final_project.infrastructure.github_client import GitHubRepository
 
@@ -65,11 +65,12 @@ class RepositoryCsvRow:
         ]
 
     @classmethod
-    def from_github_repository(cls, repo: GitHubRepository) -> RepositoryCsvRow:
+    def from_github_repository(
+        cls, repo: GitHubRepository
+    ) -> RepositoryCsvRow:
         """Create a RepositoryCsvRow from a GitHubRepository."""
-        topics = None
-        if getattr(repo, "topics", None):
-            topics = ";".join(repo.topics)
+        topics_list = getattr(repo, "topics", None)
+        topics = ";".join(topics_list) if topics_list else None
 
         return cls(
             name=repo.name,

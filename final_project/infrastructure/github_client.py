@@ -120,8 +120,12 @@ class GitHubClient:
                 size=item.get("size"),
                 open_issues_count=item.get("open_issues_count"),
                 watchers_count=item.get("watchers_count"),
-                license_name=(item.get("license") or {}).get("name") if item.get("license") is not None else None,
-                topics=item.get("topics") if item.get("topics") is not None else None,
+                license_name=(item.get("license") or {}).get("name")
+                if item.get("license") is not None
+                else None,
+                topics=item.get("topics")
+                if item.get("topics") is not None
+                else None,
                 has_issues=item.get("has_issues"),
                 has_projects=item.get("has_projects"),
                 has_downloads=item.get("has_downloads"),

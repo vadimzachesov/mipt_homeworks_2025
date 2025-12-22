@@ -5,7 +5,7 @@ def build_github_search_query(
     forks_min: int = 0,
     forks_max: int | None = None,
     created_from: str | None = None,
-    created_to: str | None = None
+    created_to: str | None = None,
 ) -> str:
     """Build a GitHub search query based on the provided parameters."""
     query_parts = []

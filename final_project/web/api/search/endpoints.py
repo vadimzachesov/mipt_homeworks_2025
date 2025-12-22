@@ -24,7 +24,7 @@ def get_csv_writer() -> CsvWriter:
 
 def get_search_service(
     github_client: GitHubClient = Depends(get_github_client),
-    csv_writer: CsvWriter = Depends(get_csv_writer)
+    csv_writer: CsvWriter = Depends(get_csv_writer),
 ) -> SearchService:
     """Get the search service."""
     return SearchService(github_client=github_client, csv_writer=csv_writer)
@@ -39,9 +39,13 @@ async def search_repositories(
     stars_max: int = Query(None, ge=0),
     forks_min: int = Query(0, ge=0),
     forks_max: int = Query(None, ge=0),
-    created_from: str | None = Query(None, description="Дата создания от (YYYY-MM-DD)"),
-    created_to: str | None = Query(None, description="Дата создания до (YYYY-MM-DD)"),
-    service: SearchService = Depends(get_search_service)
+    created_from: str | None = Query(
+        None, description="Дата создания от (YYYY-MM-DD)"
+    ),
+    created_to: str | None = Query(
+        None, description="Дата создания до (YYYY-MM-DD)"
+    ),
+    service: SearchService = Depends(get_search_service),
 ) -> dict[str, Any]:
     """Search for repositories on GitHub."""
     try:
@@ -54,18 +58,21 @@ async def search_repositories(
             forks_min=forks_min,
             forks_max=forks_max,
             created_from=created_from,
-            created_to=created_to
+            created_to=created_to,
         )
 
         return {
             "status": "success",
             "message": "File created successfully",
-            "filename": filename
+            "filename": filename,
         }
     except HTTPException:
         raise
     except Exception as exc:
         tb = traceback.format_exc()
-        logger.error("Unhandled exception in search_repositories: %s\n%s", exc, tb)
-        raise HTTPException(status_code=500, detail=f"Internal server error: {exc}") \
-        from exc
+        logger.error(
+            "Unhandled exception in search_repositories: %s\n%s", exc, tb
+        )
+        raise HTTPException(
+            status_code=500, detail=f"Internal server error: {exc}"
+        ) from exc

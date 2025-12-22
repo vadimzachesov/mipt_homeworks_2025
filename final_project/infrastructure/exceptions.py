@@ -11,8 +11,5 @@ class GitHubAPIRequestError(GitHubAPIError):
     """GitHub API request error."""
 
 
-
 class GitHubAPIStatusError(GitHubAPIError):
     """GitHub API status error."""
-
-
