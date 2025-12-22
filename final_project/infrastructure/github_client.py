@@ -23,6 +23,23 @@ class GitHubRepository:
     updated_at: str
     owner_login: str
     owner_avatar_url: str
+    created_at: str | None = None
+    homepage: str | None = None
+    size: int | None = None
+    open_issues_count: int | None = None
+    watchers_count: int | None = None
+    license_name: str | None = None
+    topics: list[str] | None = None
+    has_issues: bool | None = None
+    has_projects: bool | None = None
+    has_downloads: bool | None = None
+    has_wiki: bool | None = None
+    has_pages: bool | None = None
+    has_discussions: bool | None = None
+    fork: bool | None = None
+    archived: bool | None = None
+    is_template: bool | None = None
+    default_branch: str | None = None
 
 
 @dataclass
@@ -98,6 +115,23 @@ class GitHubClient:
                 updated_at=item["updated_at"],
                 owner_login=item["owner"]["login"],
                 owner_avatar_url=item["owner"]["avatar_url"],
+                created_at=item.get("created_at"),
+                homepage=item.get("homepage"),
+                size=item.get("size"),
+                open_issues_count=item.get("open_issues_count"),
+                watchers_count=item.get("watchers_count"),
+                license_name=(item.get("license") or {}).get("name") if item.get("license") is not None else None,
+                topics=item.get("topics") if item.get("topics") is not None else None,
+                has_issues=item.get("has_issues"),
+                has_projects=item.get("has_projects"),
+                has_downloads=item.get("has_downloads"),
+                has_wiki=item.get("has_wiki"),
+                has_pages=item.get("has_pages"),
+                has_discussions=item.get("has_discussions"),
+                fork=item.get("fork"),
+                archived=item.get("archived"),
+                is_template=item.get("is_template"),
+                default_branch=item.get("default_branch"),
             )
             for item in data["items"]
         ]

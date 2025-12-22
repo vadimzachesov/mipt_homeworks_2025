@@ -1,6 +1,6 @@
 import csv
 import io
-from dataclasses import asdict
+from dataclasses import asdict, fields
 from pathlib import Path
 
 from aiofile import async_open
@@ -19,6 +19,9 @@ class CsvWriter:
         """Write repository data to a CSV file."""
         fieldnames = RepositoryCsvRow.get_fieldnames()
 
+        dataclass_field_names = [f.name for f in fields(RepositoryCsvRow)]
+        header_map = dict(zip(dataclass_field_names, fieldnames))
+
         async with async_open(path, "w") as afp:
             io_obj = io.StringIO()
             writer = csv.DictWriter(io_obj, fieldnames=fieldnames)
@@ -30,10 +33,7 @@ class CsvWriter:
 
             for row in rows:
                 row_dict = asdict(row)
-                formatted_row = {
-                    key.replace("_", " ").title(): value
-                    for key, value in row_dict.items()
-                }
+                formatted_row = {header_map[key]: value for key, value in row_dict.items()}
                 writer.writerow(formatted_row)
                 await afp.write(io_obj.getvalue())
                 io_obj.seek(0)
