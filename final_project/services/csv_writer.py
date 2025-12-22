@@ -20,7 +20,7 @@ class CsvWriter:
         fieldnames = RepositoryCsvRow.get_fieldnames()
 
         dataclass_field_names = [f.name for f in fields(RepositoryCsvRow)]
-        header_map = dict(zip(dataclass_field_names, fieldnames))
+        header_map = dict(zip(dataclass_field_names, fieldnames, strict=True))
 
         async with async_open(path, "w") as afp:
             io_obj = io.StringIO()
